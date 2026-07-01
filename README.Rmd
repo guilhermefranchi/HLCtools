@@ -1,0 +1,107 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+pkgload::load_all(".")
+```
+
+# HLCtools
+
+`HLCtools` calculates Herd Lying Concordance (HLC) metrics from individual animal lying-behaviour data.
+
+HLC is a framework for quantifying group-level behavioural cohesion. It uses the distribution of individual lying behaviour within each observation interval to estimate how similarly animals are behaving as a group.
+
+## Concept
+
+Traditional threshold-based synchrony metrics classify an interval as synchronous when a fixed proportion of animals are lying, for example 70%. HLC takes a different approach: it calculates group cohesion continuously from between-animal dispersion.
+
+The package currently supports:
+
+- `HLC_SD`: standard-deviation-based HLC
+- `HLC_MAD`: mean-absolute-deviation-based HLC
+- `HLC_IQR`: interquartile-range-based HLC
+- `HLC_ENT`: entropy-based HLC
+
+The package also calculates lying-weighted HLC, which combines group cohesion with the proportion of the interval spent lying.
+
+## Installation
+
+```{r eval=FALSE}
+
+# Development version
+# install.packages("remotes")
+# remotes::install_github("your-github-username/HLCtools")
+
+library(HLCtools)
+
+```
+
+## Example data
+
+```{r}
+data(example_lies)
+
+example_lies
+```
+
+## Calculate interval-level HLC
+
+```{r}
+hlc_intervals <- calculate_hlc(
+  data = example_lies,
+  group = group,
+  animal = cow,
+  day = day,
+  period = week,
+  interval = time,
+  lying = lying,
+  interval_min = 15,
+  methods = c("sd", "mad", "iqr", "entropy"),
+  sync_thresholds = c(0.6, 0.7, 0.8, 0.9),
+  add_lying_weighted = TRUE
+)
+
+hlc_intervals
+```
+
+## Summarise HLC by day
+
+```{r}
+hlc_daily <- summarise_hlc_daily(
+  data = hlc_intervals,
+  group = group,
+  day = day,
+  period = week,
+  interval_min = 15
+)
+
+hlc_daily
+```
+
+## Available methods
+
+```{r}
+hlc_methods()
+```
+
+## Interpretation
+
+Unweighted HLC describes group-level behavioural cohesion. It can be high when animals are uniformly lying or uniformly standing.
+
+Lying-weighted HLC describes cohesive lying specifically. It is calculated by multiplying interval-level HLC by the mean lying proportion in that interval.
+
+Thus:
+
+- high HLC + high lying-weighted HLC = cohesive collective lying;
+- high HLC + low lying-weighted HLC = cohesive behaviour, but not mainly lying;
+- low HLC = fragmented group behaviour.
+
+## Current scope
+
+`HLCtools` computes HLC metrics. It does not automatically decide which dispersion basis is universally best. The choice of SD, MAD, IQR, entropy, or another implementation should depend on the dataset, biological question, group size, sampling interval, and intended application.

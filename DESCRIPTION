@@ -1,0 +1,19 @@
+Package: HLCtools
+Title: Herd Lying Concordance
+Version: 0.0.0.9000
+Authors@R: 
+    person("Guilherme", "Amorim Franchi", , "gaf@anivet.au.dk", role = c("aut", "cre"))
+Description: Tools for calculating Herd Lying Concordance metrics from individual animal lying behaviour data. The package supports multiple dispersion bases, threshold synchrony comparisons, and lying-weighted HLC metrics.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    dplyr,
+    rlang
+Depends: 
+    R (>= 3.5)
+LazyData: true

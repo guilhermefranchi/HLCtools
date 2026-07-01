@@ -1,0 +1,12 @@
+utils::globalVariables(c(
+  ".lying",
+  ".lying_binary",
+  "entropy_raw",
+  "iqr_lying",
+  "lying_prop",
+  "mad_lying",
+  "mean_lying",
+  "n_animals",
+  "p_lying",
+  "sd_lying"
+))
