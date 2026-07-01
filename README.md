@@ -33,8 +33,6 @@ cohesion with the proportion of the interval spent lying.
 # Development version
 # install.packages("remotes")
 # remotes::install_github("your-github-username/HLCtools")
-
-library(HLCtools)
 ```
 
 ## Example data

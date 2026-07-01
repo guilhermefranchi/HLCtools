@@ -1,0 +1,149 @@
+---
+title: "Getting started with HLCtools"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with HLCtools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+
+`HLCtools` calculates Herd Lying Concordance (HLC) metrics from individual animal lying-behaviour data.
+
+HLC is a framework for quantifying group-level behavioural cohesion. Instead of classifying an interval as synchronous using a fixed threshold, HLC uses the distribution of individual animal lying behaviour within each interval.
+
+The package currently supports four HLC implementations:
+
+- `HLC_SD`: standard-deviation-based HLC
+- `HLC_MAD`: mean-absolute-deviation-based HLC
+- `HLC_IQR`: interquartile-range-based HLC
+- `HLC_ENT`: entropy-based HLC
+
+The package also calculates lying-weighted HLC, which combines group cohesion with the proportion of the interval spent lying.
+
+# Load package and example data
+
+```{r}
+library(HLCtools)
+
+data(example_lies)
+
+example_lies
+```
+
+# Required data format
+
+The input data should contain one row per animal per time interval.
+
+At minimum, the data should contain:
+
+- a group identifier;
+- an animal identifier;
+- a time interval identifier;
+- lying time within the interval.
+
+Optional but usually useful columns include:
+
+- day or date;
+- week or experimental period.
+
+In `example_lies`, the relevant columns are:
+
+```{r}
+str(example_lies)
+```
+
+# Calculate interval-level HLC
+
+```{r}
+hlc_intervals <- calculate_hlc(
+  data = example_lies,
+  group = group,
+  animal = cow,
+  day = day,
+  period = week,
+  interval = time,
+  lying = lying,
+  interval_min = 15,
+  methods = c("sd", "mad", "iqr", "entropy"),
+  sync_thresholds = c(0.6, 0.7, 0.8, 0.9),
+  add_lying_weighted = TRUE
+)
+
+hlc_intervals
+```
+
+The output contains one row per group-time interval.
+
+Important columns include:
+
+- `mean_lying`: mean lying minutes in the interval;
+- `lying_prop`: mean lying proportion in the interval;
+- `HLC_SD`, `HLC_MAD`, `HLC_IQR`, `HLC_ENT`: unweighted HLC metrics;
+- `HLC_SD_LYING`, `HLC_MAD_LYING`, `HLC_IQR_LYING`, `HLC_ENT_LYING`: lying-weighted HLC metrics;
+- `sync60`, `sync70`, `sync80`, `sync90`: threshold synchrony indicators.
+
+# Summarise HLC by day
+
+```{r}
+hlc_daily <- summarise_hlc_daily(
+  data = hlc_intervals,
+  group = group,
+  day = day,
+  period = week,
+  interval_min = 15
+)
+
+hlc_daily
+```
+
+The daily summary contains one row per group-day.
+
+Daily HLC columns are means of interval-level HLC values. Synchrony threshold columns are summarised as minutes per day.
+
+# Interpretation
+
+Unweighted HLC describes group-level behavioural cohesion.
+
+A high unweighted HLC value means that animals behaved similarly within the interval. This can occur when animals are uniformly lying or uniformly standing.
+
+Lying-weighted HLC describes cohesive lying specifically.
+
+A high lying-weighted HLC value means that animals were both behaviourally cohesive and lying.
+
+# Using HLC and lying-weighted HLC together
+
+The two metrics can be interpreted together:
+
+- high HLC and high lying-weighted HLC: cohesive collective lying;
+- high HLC and low lying-weighted HLC: cohesive behaviour, but not mainly lying;
+- low HLC: fragmented group behaviour.
+
+# Available HLC methods
+
+```{r}
+hlc_methods()
+```
+
+# Notes on method choice
+
+`HLCtools` does not assume that one dispersion basis is universally best.
+
+The choice of SD, MAD, IQR, entropy, or another implementation should depend on:
+
+- the biological question;
+- group size;
+- sampling interval;
+- behaviour type;
+- data quality;
+- intended monitoring application.
+
+Researchers are encouraged to calculate multiple HLC variants and report the dispersion basis used.

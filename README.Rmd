@@ -38,8 +38,6 @@ The package also calculates lying-weighted HLC, which combines group cohesion wi
 # install.packages("remotes")
 # remotes::install_github("your-github-username/HLCtools")
 
-library(HLCtools)
-
 ```
 
 ## Example data
