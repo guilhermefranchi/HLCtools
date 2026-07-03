@@ -18,6 +18,10 @@
 ## Test environments
 
 * Local Windows 11, R 4.4.2
+* GitHub Actions:
+  * Windows, R release
+  * macOS, R release
+  * Ubuntu, R release
 
 ## Downstream dependencies
 
