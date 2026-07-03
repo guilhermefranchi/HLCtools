@@ -18,3 +18,4 @@ utils::globalVariables(c(
   "high_boundary_collapse",
   "n_ranked_criteria"
 ))
+
