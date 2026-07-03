@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use HLCtools, please cite it using the metadata from this file."
+type: software
+title: "HLCtools: Calculate Herd Lying Concordance Metrics"
+version: "0.1.0"
+authors:
+  - family-names: "Amorim Franchi"
+    given-names: "Guilherme"
+    email: "gaf@anivet.au.dk"
+    affiliation: "Aarhus University"
+    orcid: https://orcid.org/0000-0001-7653-6512
+abstract: "HLCtools calculates Herd Lying Concordance metrics from individual animal lying-behaviour data. Herd Lying Concordance is a framework for quantifying group-level behavioural cohesion from the distribution of individual lying behaviour within observation intervals. The package supports multiple dispersion-based implementations, threshold synchrony comparisons, lying-weighted extensions, daily summaries, and descriptive method-ranking tools."
+license: "MIT"
+keywords:
+  - animal welfare
+  - dairy cattle
+  - lying behaviour
+  - synchrony
+  - group cohesion
+  - precision livestock farming
+  - accelerometer

@@ -1,0 +1,12 @@
+bibentry(
+  bibtype = "Manual",
+  title = "HLCtools: Calculate Herd Lying Concordance Metrics",
+  author = c(
+    person(
+      given = "Guilherme",
+      family = "Amorim Franchi"
+    )
+  ),
+  year = "2026",
+  note = "R package version 0.1.0. Developed at Aarhus University."
+)

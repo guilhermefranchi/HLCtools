@@ -6,7 +6,8 @@ Authors@R:
         given = "Guilherme",
         family = "Amorim Franchi",
         email = "gaf@anivet.au.dk",
-        role = c("aut", "cre")
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0001-7653-6512")
     )
 Description: Calculates Herd Lying Concordance metrics from individual animal
     lying-behaviour data. Herd Lying Concordance is a framework for
