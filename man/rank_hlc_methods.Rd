@@ -11,31 +11,29 @@ rank_hlc_methods(
   lying_prop = NULL,
   metrics = NULL,
   weights = c(detectability = 1, temporal_stability = 1, outlier_robustness = 1, boundary
-    = 1, missingness = 1)
+    = 1, missingness = 1, degeneracy = 1)
 )
 }
 \arguments{
-\item{data}{A data frame containing daily or period-level HLC summaries.
-Usually this is the output of \code{summarise_hlc_daily()}.}
+\item{data}{A data frame containing HLC summary columns.}
 
-\item{group}{Optional column identifying treatment, herd, pen, farm, or other
-comparison group. If supplied, treatment/group detectability is evaluated.}
+\item{group}{Optional column identifying treatment, herd, pen, farm, or another
+comparison group. If supplied, group detectability is evaluated.}
 
 \item{period}{Optional column identifying week, period, block, or another
 temporal unit. If supplied, temporal stability is evaluated.}
 
 \item{lying_prop}{Optional column containing lying proportion. If supplied,
-Spearman correlation between each HLC method and lying proportion is reported.
-This correlation is reported for interpretation but is not included in the
-default ranking score.}
+Spearman correlation between each HLC method and lying proportion is reported.}
 
 \item{metrics}{Optional character vector of HLC columns to rank. If \code{NULL},
-columns matching \code{mean_HLC_SD}, \code{mean_HLC_MAD}, \code{mean_HLC_IQR}, and
-\code{mean_HLC_ENT} are used when available.}
+columns matching \code{mean_HLC_SD}, \code{mean_HLC_MAD}, \code{mean_HLC_IQR},
+\code{mean_HLC_ENT}, \code{HLC_SD}, \code{HLC_MAD}, \code{HLC_IQR}, and \code{HLC_ENT}
+are used when available.}
 
 \item{weights}{Named numeric vector giving weights for ranking criteria.
 Supported names are \code{"detectability"}, \code{"temporal_stability"},
-\code{"outlier_robustness"}, \code{"boundary"}, and \code{"missingness"}.}
+\code{"outlier_robustness"}, \code{"boundary"}, \code{"missingness"}, and \code{"degeneracy"}.}
 }
 \value{
 A tibble summarising method performance and ranking. Lower
@@ -44,25 +42,29 @@ criteria. The column \code{selected} marks the top-ranked method.
 }
 \description{
 Ranks available Herd Lying Concordance (HLC) implementations using descriptive
-criteria relevant for method selection. The function is intended to support
-transparent, dataset-specific selection of an HLC implementation. It does not
-imply that one dispersion basis is universally best.
+criteria relevant for method selection. The function supports daily, weekly,
+treatment-level, or other summarised HLC outputs.
 }
 \details{
-The default criteria are:
+The ranking is intended to support transparent, dataset-specific selection of
+an HLC implementation. It does not imply that one dispersion basis is
+universally best.
+
+Ranking criteria:
 \itemize{
-\item detectability: ability to separate groups, assessed by the F statistic from
-a nested linear model comparison when \code{group} is supplied;
-\item temporal stability: mean within-group SD of period-level means when both
-\code{group} and \code{period} are supplied;
-\item outlier robustness: absolute distance of SD/MAD from 1, where values closer
-to 1 indicate less outlier sensitivity;
-\item boundary: percentage of exact 0 or 1 values;
-\item missingness: percentage of missing values.
+\item \code{detectability}: group separation, based on an F statistic from nested
+linear models when \code{group} is supplied.
+\item \code{temporal_stability}: SD of period-level means when \code{period} is supplied.
+\item \code{outlier_robustness}: absolute distance of SD/MAD from 1.
+\item \code{boundary}: percentage of exact 0 or 1 values.
+\item \code{missingness}: percentage of missing values.
+\item \code{degeneracy}: penalises metrics with zero variance or very high boundary
+collapse.
 }
 
-The ranking is descriptive and should support, not replace, biological
-interpretation.
+Criteria that cannot be evaluated because the required columns were not
+supplied are omitted from the weighted score. Metrics with missing values for
+an otherwise available criterion are ranked last for that criterion.
 }
 \examples{
 data(example_lies)

@@ -12,5 +12,9 @@ utils::globalVariables(c(
   "weighted_rank_score",
   "pct_missing",
   "pct_boundary",
-  "detectability_F"
+  "detectability_F",
+  "degeneracy_score",
+  "zero_variance",
+  "high_boundary_collapse",
+  "n_ranked_criteria"
 ))

@@ -1,45 +1,47 @@
 #' Rank HLC methods for a dataset
 #'
 #' Ranks available Herd Lying Concordance (HLC) implementations using descriptive
-#' criteria relevant for method selection. The function is intended to support
-#' transparent, dataset-specific selection of an HLC implementation. It does not
-#' imply that one dispersion basis is universally best.
+#' criteria relevant for method selection. The function supports daily, weekly,
+#' treatment-level, or other summarised HLC outputs.
 #'
-#' @param data A data frame containing daily or period-level HLC summaries.
-#'   Usually this is the output of `summarise_hlc_daily()`.
-#' @param group Optional column identifying treatment, herd, pen, farm, or other
-#'   comparison group. If supplied, treatment/group detectability is evaluated.
+#' The ranking is intended to support transparent, dataset-specific selection of
+#' an HLC implementation. It does not imply that one dispersion basis is
+#' universally best.
+#'
+#' @param data A data frame containing HLC summary columns.
+#' @param group Optional column identifying treatment, herd, pen, farm, or another
+#'   comparison group. If supplied, group detectability is evaluated.
 #' @param period Optional column identifying week, period, block, or another
 #'   temporal unit. If supplied, temporal stability is evaluated.
 #' @param lying_prop Optional column containing lying proportion. If supplied,
 #'   Spearman correlation between each HLC method and lying proportion is reported.
-#'   This correlation is reported for interpretation but is not included in the
-#'   default ranking score.
 #' @param metrics Optional character vector of HLC columns to rank. If `NULL`,
-#'   columns matching `mean_HLC_SD`, `mean_HLC_MAD`, `mean_HLC_IQR`, and
-#'   `mean_HLC_ENT` are used when available.
+#'   columns matching `mean_HLC_SD`, `mean_HLC_MAD`, `mean_HLC_IQR`,
+#'   `mean_HLC_ENT`, `HLC_SD`, `HLC_MAD`, `HLC_IQR`, and `HLC_ENT`
+#'   are used when available.
 #' @param weights Named numeric vector giving weights for ranking criteria.
 #'   Supported names are `"detectability"`, `"temporal_stability"`,
-#'   `"outlier_robustness"`, `"boundary"`, and `"missingness"`.
+#'   `"outlier_robustness"`, `"boundary"`, `"missingness"`, and `"degeneracy"`.
 #'
 #' @return A tibble summarising method performance and ranking. Lower
 #'   `weighted_rank_score` indicates a more favourable method under the chosen
 #'   criteria. The column `selected` marks the top-ranked method.
 #'
 #' @details
-#' The default criteria are:
+#' Ranking criteria:
 #'
-#' - detectability: ability to separate groups, assessed by the F statistic from
-#'   a nested linear model comparison when `group` is supplied;
-#' - temporal stability: mean within-group SD of period-level means when both
-#'   `group` and `period` are supplied;
-#' - outlier robustness: absolute distance of SD/MAD from 1, where values closer
-#'   to 1 indicate less outlier sensitivity;
-#' - boundary: percentage of exact 0 or 1 values;
-#' - missingness: percentage of missing values.
+#' - `detectability`: group separation, based on an F statistic from nested
+#'   linear models when `group` is supplied.
+#' - `temporal_stability`: SD of period-level means when `period` is supplied.
+#' - `outlier_robustness`: absolute distance of SD/MAD from 1.
+#' - `boundary`: percentage of exact 0 or 1 values.
+#' - `missingness`: percentage of missing values.
+#' - `degeneracy`: penalises metrics with zero variance or very high boundary
+#'   collapse.
 #'
-#' The ranking is descriptive and should support, not replace, biological
-#' interpretation.
+#' Criteria that cannot be evaluated because the required columns were not
+#' supplied are omitted from the weighted score. Metrics with missing values for
+#' an otherwise available criterion are ranked last for that criterion.
 #'
 #' @examples
 #' data(example_lies)
@@ -79,30 +81,17 @@ rank_hlc_methods <- function(data,
                                temporal_stability = 1,
                                outlier_robustness = 1,
                                boundary = 1,
-                               missingness = 1
+                               missingness = 1,
+                               degeneracy = 1
                              )) {
 
   group_quo <- rlang::enquo(group)
   period_quo <- rlang::enquo(period)
   lying_prop_quo <- rlang::enquo(lying_prop)
 
-  group_name <- if (rlang::quo_is_null(group_quo)) {
-    NULL
-  } else {
-    rlang::as_name(group_quo)
-  }
-
-  period_name <- if (rlang::quo_is_null(period_quo)) {
-    NULL
-  } else {
-    rlang::as_name(period_quo)
-  }
-
-  lying_prop_name <- if (rlang::quo_is_null(lying_prop_quo)) {
-    NULL
-  } else {
-    rlang::as_name(lying_prop_quo)
-  }
+  group_name <- if (rlang::quo_is_null(group_quo)) NULL else rlang::as_name(group_quo)
+  period_name <- if (rlang::quo_is_null(period_quo)) NULL else rlang::as_name(period_quo)
+  lying_prop_name <- if (rlang::quo_is_null(lying_prop_quo)) NULL else rlang::as_name(lying_prop_quo)
 
   if (is.null(metrics)) {
     default_metric_cols <- c(
@@ -144,7 +133,8 @@ rank_hlc_methods <- function(data,
     "temporal_stability",
     "outlier_robustness",
     "boundary",
-    "missingness"
+    "missingness",
+    "degeneracy"
   )
 
   unknown_weights <- setdiff(names(weights), allowed_weights)
@@ -253,9 +243,7 @@ rank_hlc_methods <- function(data,
 
       dat <- dat[stats::complete.cases(dat), , drop = FALSE]
 
-      if (nrow(dat) == 0) {
-        return(NA_real_)
-      }
+      if (nrow(dat) == 0) return(NA_real_)
 
       period_means <- stats::aggregate(
         x ~ group + period,
@@ -279,9 +267,7 @@ rank_hlc_methods <- function(data,
 
     dat <- dat[stats::complete.cases(dat), , drop = FALSE]
 
-    if (nrow(dat) == 0) {
-      return(NA_real_)
-    }
+    if (nrow(dat) == 0) return(NA_real_)
 
     period_means <- stats::aggregate(
       x ~ period,
@@ -331,19 +317,18 @@ rank_hlc_methods <- function(data,
         ok <- is.finite(x) & is.finite(lying_vec)
 
         if (sum(ok) >= 3) {
-          suppressWarnings(
-            stats::cor(
-              x[ok],
-              lying_vec[ok],
-              method = "spearman"
-            )
-          )
+          suppressWarnings(stats::cor(x[ok], lying_vec[ok], method = "spearman"))
         } else {
           NA_real_
         }
       } else {
         NA_real_
       }
+
+      pct_boundary <- 100 * mean(x %in% c(0, 1), na.rm = TRUE)
+      unique_non_missing <- length(unique(x[!is.na(x)]))
+      zero_variance <- isTRUE(is.finite(sd_val) && sd_val == 0)
+      high_boundary_collapse <- isTRUE(is.finite(pct_boundary) && pct_boundary >= 95)
 
       data.frame(
         method = gsub("^mean_", "", col),
@@ -352,11 +337,15 @@ rank_hlc_methods <- function(data,
         n_non_missing = sum(!is.na(x)),
         pct_missing = 100 * mean(is.na(x)),
         mean = mean(x, na.rm = TRUE),
-        sd = stats::sd(x, na.rm = TRUE),
+        sd = sd_val,
         median = stats::median(x, na.rm = TRUE),
         min = min(x, na.rm = TRUE),
         max = max(x, na.rm = TRUE),
-        pct_boundary = 100 * mean(x %in% c(0, 1), na.rm = TRUE),
+        n_unique = unique_non_missing,
+        pct_boundary = pct_boundary,
+        zero_variance = zero_variance,
+        high_boundary_collapse = high_boundary_collapse,
+        degeneracy_score = as.numeric(zero_variance) + as.numeric(high_boundary_collapse),
         detectability_F = detect$detectability_F,
         detectability_p = detect$detectability_p,
         delta_AIC = detect$delta_AIC,
@@ -371,53 +360,64 @@ rank_hlc_methods <- function(data,
 
   out <- dplyr::bind_rows(method_summaries)
 
-  rank_or_na <- function(x, decreasing = FALSE) {
+  rank_available <- function(x, decreasing = FALSE) {
     if (all(is.na(x))) {
       return(rep(NA_real_, length(x)))
     }
 
-    if (decreasing) {
-      return(rank(-x, ties.method = "average", na.last = "keep"))
+    x_rank <- if (decreasing) {
+      rank(-x, ties.method = "average", na.last = "keep")
+    } else {
+      rank(x, ties.method = "average", na.last = "keep")
     }
 
-    rank(x, ties.method = "average", na.last = "keep")
+    worst_rank <- max(x_rank, na.rm = TRUE) + 1
+    x_rank[is.na(x_rank)] <- worst_rank
+
+    x_rank
   }
 
-  out$rank_detectability <- rank_or_na(
-    out$detectability_F,
-    decreasing = TRUE
-  )
+  out$rank_detectability <- if (all(is.na(out$detectability_F))) {
+    NA_real_
+  } else {
+    rank_available(out$detectability_F, decreasing = TRUE)
+  }
 
-  out$rank_temporal_stability <- rank_or_na(
-    out$temporal_sd,
-    decreasing = FALSE
-  )
+  out$rank_temporal_stability <- if (all(is.na(out$temporal_sd))) {
+    NA_real_
+  } else {
+    rank_available(out$temporal_sd, decreasing = FALSE)
+  }
 
-  out$rank_outlier_robustness <- rank_or_na(
-    out$outlier_distance_from_1,
-    decreasing = FALSE
-  )
+  out$rank_outlier_robustness <- if (all(is.na(out$outlier_distance_from_1))) {
+    NA_real_
+  } else {
+    rank_available(out$outlier_distance_from_1, decreasing = FALSE)
+  }
 
-  out$rank_boundary <- rank_or_na(
-    out$pct_boundary,
-    decreasing = FALSE
-  )
-
-  out$rank_missingness <- rank_or_na(
-    out$pct_missing,
-    decreasing = FALSE
-  )
+  out$rank_boundary <- rank_available(out$pct_boundary, decreasing = FALSE)
+  out$rank_missingness <- rank_available(out$pct_missing, decreasing = FALSE)
+  out$rank_degeneracy <- rank_available(out$degeneracy_score, decreasing = FALSE)
 
   rank_matrix <- cbind(
     detectability = out$rank_detectability,
     temporal_stability = out$rank_temporal_stability,
     outlier_robustness = out$rank_outlier_robustness,
     boundary = out$rank_boundary,
-    missingness = out$rank_missingness
+    missingness = out$rank_missingness,
+    degeneracy = out$rank_degeneracy
   )
 
   weights <- weights[colnames(rank_matrix)]
   weights[is.na(weights)] <- 0
+
+  out$n_ranked_criteria <- apply(
+    rank_matrix,
+    1,
+    function(ranks) {
+      sum(!is.na(ranks) & weights > 0)
+    }
+  )
 
   out$weighted_rank_score <- apply(
     rank_matrix,
@@ -436,12 +436,19 @@ rank_hlc_methods <- function(data,
   out <- out |>
     dplyr::arrange(
       weighted_rank_score,
+      degeneracy_score,
       pct_missing,
       pct_boundary,
       dplyr::desc(detectability_F)
     ) |>
     dplyr::mutate(
-      selected = dplyr::row_number() == 1
+      selected = dplyr::row_number() == 1,
+      recommendation_note = dplyr::case_when(
+        zero_variance ~ "Caution: metric has zero variance in this dataset.",
+        high_boundary_collapse ~ "Caution: metric is highly concentrated at 0 or 1.",
+        n_ranked_criteria <= 2 ~ "Limited ranking information; provide group/period columns if available.",
+        TRUE ~ "Selected/ranked under available criteria."
+      )
     )
 
   out

@@ -37,10 +37,9 @@ hlc_weekly <- calculate_hlc(
   add_lying_weighted = TRUE
 )
 
+compare_hlc_methods(hlc_weekly)
 
-rank_hlc_methods(
-  data = hlc_weekly
-)
+rank_hlc_methods(hlc_weekly)
 
 
 
