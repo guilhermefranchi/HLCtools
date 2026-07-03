@@ -1,24 +1,33 @@
 Package: HLCtools
-Title: Herd Lying Concordance
-Version: 0.0.0.9000
+Title: Calculate Herd Lying Concordance Metrics
+Version: 0.1.0
 Authors@R: 
-    person("Guilherme", "Amorim Franchi", , "gaf@anivet.au.dk", role = c("aut", "cre"))
-Description: Tools for calculating Herd Lying Concordance metrics from individual animal lying behaviour data. The package supports multiple dispersion bases, threshold synchrony comparisons, and lying-weighted HLC metrics.
+    person(
+        given = "Guilherme",
+        family = "Amorim Franchi",
+        email = "gaf@anivet.au.dk",
+        role = c("aut", "cre")
+    )
+Description: Calculates Herd Lying Concordance metrics from individual animal
+    lying-behaviour data. Herd Lying Concordance is a framework for
+    quantifying group-level behavioural cohesion from the distribution of
+    individual lying behaviour within observation intervals. The package
+    supports multiple dispersion-based implementations, threshold synchrony
+    comparisons, lying-weighted extensions, daily summaries, and descriptive
+    method-ranking tools.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Suggests: 
+Depends:
+    R (>= 4.1.0)
+Imports:
+    dplyr,
+    rlang
+Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
-Config/testthat/edition: 3
-Imports: 
-    dplyr,
-    rlang
-Depends: 
-    R (>= 3.5)
-LazyData: true
 VignetteBuilder: knitr
-URL: https://github.com/guilhermefranchi/HLCtools
-BugReports: https://github.com/guilhermefranchi/HLCtools/issues
+Config/testthat/edition: 3
+LazyData: true

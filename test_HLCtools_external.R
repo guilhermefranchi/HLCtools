@@ -39,7 +39,10 @@ hlc_weekly <- calculate_hlc(
 
 compare_hlc_methods(hlc_weekly)
 
-rank_hlc_methods(hlc_weekly)
-
-
+rank_hlc_methods(
+  data = hlc_weekly,
+  group = Treatment,
+  period = exp.day,
+  lying_prop = lying_prop
+)
 

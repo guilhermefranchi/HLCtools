@@ -1,4 +1,6 @@
-^HLCtools\.Rproj$
-^\.Rproj\.user$
-^LICENSE\.md$
+^dev$
 ^README\.Rmd$
+^HLCtools\.Rproj$
+^LICENSE\.md$
+^test_HLCtools_external\.R$
+^cran-comments\.md$
