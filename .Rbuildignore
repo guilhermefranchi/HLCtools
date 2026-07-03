@@ -5,3 +5,4 @@
 ^test_HLCtools_external\.R$
 ^cran-comments\.md$
 ^\.Rproj\.user$
+^\.github$
