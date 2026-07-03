@@ -23,6 +23,10 @@
   * macOS, R release
   * Ubuntu, R release
 
+## Copyright and licensing
+
+The package is released under the MIT license. Copyright is held by the package author.
+
 ## Downstream dependencies
 
 This is a new submission, so there are no downstream dependencies.

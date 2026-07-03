@@ -8,9 +8,10 @@ authors:
     given-names: "Guilherme"
     email: "gaf@anivet.au.dk"
     affiliation: "Aarhus University"
-    orcid: https://orcid.org/0000-0001-7653-6512
+    orcid: "https://orcid.org/0000-0001-7653-6512"
 abstract: "HLCtools calculates Herd Lying Concordance metrics from individual animal lying-behaviour data. Herd Lying Concordance is a framework for quantifying group-level behavioural cohesion from the distribution of individual lying behaviour within observation intervals. The package supports multiple dispersion-based implementations, threshold synchrony comparisons, lying-weighted extensions, daily summaries, and descriptive method-ranking tools."
 license: "MIT"
+repository-code: "https://github.com/guilhermefranchi/HLCtools"
 keywords:
   - animal welfare
   - dairy cattle

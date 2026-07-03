@@ -9,5 +9,6 @@
 * Added `summarise_hlc_daily()` for daily group-level summaries.
 * Added `compare_hlc_methods()` for descriptive comparison of HLC variants.
 * Added `rank_hlc_methods()` for dataset-specific descriptive ranking of HLC variants.
+* Added `hlc_methods()` and `hlc_weighted_methods()`.
 * Added `example_lies` example dataset.
 * Added getting-started vignette.

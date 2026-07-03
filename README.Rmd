@@ -17,6 +17,18 @@ pkgload::load_all(".")
 
 HLC is a framework for quantifying group-level behavioural cohesion. It uses the distribution of individual lying behaviour within each observation interval to estimate how similarly animals are behaving as a group.
 
+## Author, affiliation, and citation
+
+`HLCtools` is developed by Guilherme Amorim Franchi at Aarhus University.
+
+The package provides tools for calculating Herd Lying Concordance metrics from individual animal lying-behaviour data. HLC is intended as a flexible framework for quantifying group-level behavioural cohesion from sensor-derived activity records.
+
+If you use `HLCtools`, please cite the package:
+
+```{r}
+citation("HLCtools")
+```
+
 ## Concept
 
 Traditional threshold-based synchrony metrics classify an interval as synchronous when a fixed proportion of animals are lying, for example 70%. HLC takes a different approach: it calculates group cohesion continuously from between-animal dispersion.

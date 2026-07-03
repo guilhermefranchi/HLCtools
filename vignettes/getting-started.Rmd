@@ -165,3 +165,13 @@ The choice of SD, MAD, IQR, entropy, or another implementation should depend on:
 - intended monitoring application.
 
 Researchers are encouraged to calculate multiple HLC variants and report the dispersion basis used.
+
+# Citation
+
+If you use `HLCtools`, please cite the package:
+
+```{r}
+citation("HLCtools")
+```
+
+`HLCtools` was developed at Aarhus University as research software for calculating Herd Lying Concordance metrics from individual animal lying-behaviour data.

@@ -8,5 +8,7 @@ bibentry(
     )
   ),
   year = "2026",
-  note = "R package version 0.1.0. Developed at Aarhus University."
+  note = "R package version 0.1.0. Developed at Aarhus University.",
+  institution = "Aarhus University",
+  url = "https://github.com/guilhermefranchi/HLCtools"
 )

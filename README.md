@@ -9,6 +9,38 @@ uses the distribution of individual lying behaviour within each
 observation interval to estimate how similarly animals are behaving as a
 group.
 
+## Author, affiliation, and citation
+
+`HLCtools` is developed by Guilherme Amorim Franchi at Aarhus
+University.
+
+The package provides tools for calculating Herd Lying Concordance
+metrics from individual animal lying-behaviour data. HLC is intended as
+a flexible framework for quantifying group-level behavioural cohesion
+from sensor-derived activity records.
+
+If you use `HLCtools`, please cite the package:
+
+``` r
+citation("HLCtools")
+#> To cite package 'HLCtools' in publications use:
+#> 
+#>   Amorim Franchi G (2026). _HLCtools: Calculate Herd Lying Concordance
+#>   Metrics_. R package version 0.1.0. Developed at Aarhus University.,
+#>   <https://github.com/guilhermefranchi/HLCtools>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {HLCtools: Calculate Herd Lying Concordance Metrics},
+#>     author = {Guilherme {Amorim Franchi}},
+#>     year = {2026},
+#>     note = {R package version 0.1.0. Developed at Aarhus University.},
+#>     institution = {Aarhus University},
+#>     url = {https://github.com/guilhermefranchi/HLCtools},
+#>   }
+```
+
 ## Concept
 
 Traditional threshold-based synchrony metrics classify an interval as
@@ -162,11 +194,16 @@ rank_hlc_methods(
 #> 2 HLC_MAD  mean_HLC_MAD       4             4           0 0.3866667 0.3214781
 #> 3 HLC_ENT  mean_HLC_ENT       4             4           0 0.4242837 0.4355433
 #> 4 HLC_IQR  mean_HLC_IQR       4             4           0 0.4583333 0.3435921
-#>      median        min       max pct_boundary detectability_F detectability_p
-#> 1 0.3289734 0.02020410 0.6828793            0       46.014560      0.02104854
-#> 2 0.3866667 0.04000000 0.7333333            0       22.222222      0.04217371
-#> 3 0.3340427 0.02904941 1.0000000           25        7.062389      0.11721597
-#> 4 0.5000000 0.00000000 0.8333333           25        1.923077      0.29985996
+#>      median        min       max n_unique pct_boundary zero_variance
+#> 1 0.3289734 0.02020410 0.6828793        4            0         FALSE
+#> 2 0.3866667 0.04000000 0.7333333        4            0         FALSE
+#> 3 0.3340427 0.02904941 1.0000000        4           25         FALSE
+#> 4 0.5000000 0.00000000 0.8333333        3           25         FALSE
+#>   high_boundary_collapse degeneracy_score detectability_F detectability_p
+#> 1                  FALSE                0       46.014560      0.02104854
+#> 2                  FALSE                0       22.222222      0.04217371
+#> 3                  FALSE                0        7.062389      0.11721597
+#> 4                  FALSE                0        1.923077      0.29985996
 #>    delta_AIC temporal_sd outlier_sensitivity outlier_distance_from_1
 #> 1 10.7134285         NaN           0.8296094               0.1703906
 #> 2  7.9764932         NaN           0.8131274               0.1868726
@@ -177,16 +214,21 @@ rank_hlc_methods(
 #> 2           0.4000000                  2                      NA
 #> 3           0.4000000                  3                      NA
 #> 4           0.6324555                  4                      NA
-#>   rank_outlier_robustness rank_boundary rank_missingness weighted_rank_score
-#> 1                       1           1.5              2.5                 1.5
-#> 2                       2           1.5              2.5                 2.0
-#> 3                       3           3.5              2.5                 3.0
-#> 4                       4           3.5              2.5                 3.5
-#>   selected
-#> 1     TRUE
-#> 2    FALSE
-#> 3    FALSE
-#> 4    FALSE
+#>   rank_outlier_robustness rank_boundary rank_missingness rank_degeneracy
+#> 1                       1           1.5              2.5             2.5
+#> 2                       2           1.5              2.5             2.5
+#> 3                       3           3.5              2.5             2.5
+#> 4                       4           3.5              2.5             2.5
+#>   n_ranked_criteria weighted_rank_score selected
+#> 1                 5                 1.7     TRUE
+#> 2                 5                 2.1    FALSE
+#> 3                 5                 2.9    FALSE
+#> 4                 5                 3.3    FALSE
+#>                         recommendation_note
+#> 1 Selected/ranked under available criteria.
+#> 2 Selected/ranked under available criteria.
+#> 3 Selected/ranked under available criteria.
+#> 4 Selected/ranked under available criteria.
 ```
 
 The ranking is based on available criteria such as group detectability,
