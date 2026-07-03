@@ -4,16 +4,22 @@
 \alias{compare_hlc_methods}
 \title{Compare HLC methods}
 \usage{
-compare_hlc_methods(data)
+compare_hlc_methods(data, metrics = NULL)
 }
 \arguments{
-\item{data}{A daily HLC data frame produced by \code{summarise_hlc_daily()}.}
+\item{data}{A data frame containing HLC summary columns.
+This can be daily, weekly, treatment-level, or another summarised object.}
+
+\item{metrics}{Optional character vector of HLC columns to compare. If \code{NULL},
+columns matching \code{mean_HLC_SD}, \code{mean_HLC_MAD}, \code{mean_HLC_IQR},
+\code{mean_HLC_ENT}, \code{HLC_SD}, \code{HLC_MAD}, \code{HLC_IQR}, and \code{HLC_ENT}
+are used when available.}
 }
 \value{
 A tibble with descriptive summaries for each available HLC method.
 }
 \description{
-Summarises daily HLC metrics across available dispersion bases.
+Summarises HLC metrics across available dispersion bases.
 This function helps users compare HLC implementations rather than
 automatically selecting a single best metric.
 }

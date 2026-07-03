@@ -109,7 +109,11 @@ rank_hlc_methods <- function(data,
       "mean_HLC_SD",
       "mean_HLC_MAD",
       "mean_HLC_IQR",
-      "mean_HLC_ENT"
+      "mean_HLC_ENT",
+      "HLC_SD",
+      "HLC_MAD",
+      "HLC_IQR",
+      "HLC_ENT"
     )
 
     metrics <- intersect(default_metric_cols, names(data))
@@ -118,7 +122,8 @@ rank_hlc_methods <- function(data,
   if (length(metrics) == 0) {
     stop(
       "No HLC metric columns were found. Expected one or more of: ",
-      "mean_HLC_SD, mean_HLC_MAD, mean_HLC_IQR, mean_HLC_ENT. ",
+      "mean_HLC_SD, mean_HLC_MAD, mean_HLC_IQR, mean_HLC_ENT, ",
+      "or HLC_SD, HLC_MAD, HLC_IQR, HLC_ENT. ",
       "Alternatively, provide metric column names using the `metrics` argument.",
       call. = FALSE
     )

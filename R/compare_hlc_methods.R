@@ -1,10 +1,15 @@
 #' Compare HLC methods
 #'
-#' Summarises daily HLC metrics across available dispersion bases.
+#' Summarises HLC metrics across available dispersion bases.
 #' This function helps users compare HLC implementations rather than
 #' automatically selecting a single best metric.
 #'
-#' @param data A daily HLC data frame produced by `summarise_hlc_daily()`.
+#' @param data A data frame containing HLC summary columns.
+#'   This can be daily, weekly, treatment-level, or another summarised object.
+#' @param metrics Optional character vector of HLC columns to compare. If `NULL`,
+#'   columns matching `mean_HLC_SD`, `mean_HLC_MAD`, `mean_HLC_IQR`,
+#'   `mean_HLC_ENT`, `HLC_SD`, `HLC_MAD`, `HLC_IQR`, and `HLC_ENT`
+#'   are used when available.
 #'
 #' @return A tibble with descriptive summaries for each available HLC method.
 #'
@@ -31,21 +36,41 @@
 #' compare_hlc_methods(hlc_daily)
 #'
 #' @export
-compare_hlc_methods <- function(data) {
+compare_hlc_methods <- function(data, metrics = NULL) {
 
-  method_cols <- c(
-    "mean_HLC_SD",
-    "mean_HLC_MAD",
-    "mean_HLC_IQR",
-    "mean_HLC_ENT"
-  )
+  if (is.null(metrics)) {
+    method_cols <- c(
+      "mean_HLC_SD",
+      "mean_HLC_MAD",
+      "mean_HLC_IQR",
+      "mean_HLC_ENT",
+      "HLC_SD",
+      "HLC_MAD",
+      "HLC_IQR",
+      "HLC_ENT"
+    )
 
-  available_cols <- intersect(method_cols, names(data))
+    available_cols <- intersect(method_cols, names(data))
+  } else {
+    available_cols <- metrics
+  }
+
+  missing_cols <- setdiff(available_cols, names(data))
+
+  if (length(missing_cols) > 0) {
+    stop(
+      "The following metric columns were not found in `data`: ",
+      paste(missing_cols, collapse = ", "),
+      call. = FALSE
+    )
+  }
 
   if (length(available_cols) == 0) {
     stop(
-      "No daily HLC columns were found. Expected one or more of: ",
-      paste(method_cols, collapse = ", "),
+      "No HLC columns were found. Expected one or more of: ",
+      "mean_HLC_SD, mean_HLC_MAD, mean_HLC_IQR, mean_HLC_ENT, ",
+      "or HLC_SD, HLC_MAD, HLC_IQR, HLC_ENT. ",
+      "Alternatively, provide metric column names using the `metrics` argument.",
       call. = FALSE
     )
   }
@@ -56,7 +81,8 @@ compare_hlc_methods <- function(data) {
       x <- data[[col]]
 
       data.frame(
-        method = gsub("^mean_HLC_", "HLC_", col),
+        method = gsub("^mean_", "", col),
+        metric_column = col,
         n = sum(!is.na(x)),
         mean = mean(x, na.rm = TRUE),
         sd = stats::sd(x, na.rm = TRUE),

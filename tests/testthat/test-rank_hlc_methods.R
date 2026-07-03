@@ -100,3 +100,27 @@ test_that("rank_hlc_methods accepts explicit metric columns", {
   expect_equal(nrow(ranked), 2)
   expect_equal(sum(ranked$selected), 1)
 })
+
+test_that("rank_hlc_methods auto-detects weekly-style HLC columns", {
+
+  dat <- data.frame(
+    group = rep(c("A", "B"), each = 5),
+    week = rep(1:5, times = 2),
+    HLC_SD = c(0.70, 0.72, 0.74, 0.73, 0.75, 0.40, 0.42, 0.43, 0.41, 0.44),
+    HLC_MAD = c(0.68, 0.69, 0.70, 0.71, 0.72, 0.45, 0.46, 0.47, 0.46, 0.48),
+    HLC_IQR = c(0.80, 0.79, 0.78, 0.81, 0.82, 0.50, 0.51, 0.49, 0.52, 0.53),
+    HLC_ENT = c(0.60, 0.61, 0.59, 0.62, 0.63, 0.55, 0.54, 0.56, 0.57, 0.58),
+    mean_lying_prop = c(0.5, 0.52, 0.51, 0.53, 0.54, 0.4, 0.42, 0.41, 0.43, 0.44)
+  )
+
+  ranked <- rank_hlc_methods(
+    data = dat,
+    group = group,
+    period = week,
+    lying_prop = mean_lying_prop
+  )
+
+  expect_true(is.data.frame(ranked))
+  expect_true(all(c("HLC_SD", "HLC_MAD", "HLC_IQR", "HLC_ENT") %in% ranked$method))
+  expect_equal(sum(ranked$selected), 1)
+})

@@ -1,12 +1,17 @@
-install.packages("remotes")
+# Testing HLCtools in different df
 
 remotes::install_github(
   "guilhermefranchi/HLCtools",
   auth_token = gitcreds::gitcreds_get()$password,
-  upgrade = "never"
+  upgrade = "never",
+  force = TRUE
 )
 
 library(HLCtools)
+
+"rank_hlc_methods" %in% getNamespaceExports("HLCtools")
+"compare_hlc_methods" %in% getNamespaceExports("HLCtools")
+
 
 d <- readxl::read_excel(
   "O:/Tech_Collab-MBJ-GAF/Bovaer studies/Ministerial_project/materials-methods/2026_Lactating_cows/cleaned_data/IceQube_15min_2026.xlsx",
@@ -16,14 +21,15 @@ d <- readxl::read_excel(
     week = factor(week, levels = gtools::mixedsort(unique(week)))
   )
 
-data(example_lies)
 
-hlc_new_intervals <- calculate_hlc(
+
+hlc_weekly <- calculate_hlc(
   data = d,
   group = Treatment,
   animal = Cow,
-  day = exp.day,
-  interval = time,
+  day = NULL,
+  period = week,
+  interval = NULL,
   lying = LyingTime,
   interval_min = 15,
   methods = c("sd", "mad", "iqr", "entropy"),
@@ -31,26 +37,10 @@ hlc_new_intervals <- calculate_hlc(
   add_lying_weighted = TRUE
 )
 
-hlc_new_intervals <- calculate_hlc(
-  data = d,
-  group = Treatment,
-  animal = Cow,
-  day = exp.day,
-  period = week,
-  interval = time,
-  lying = LyingTime,
-  interval_min = 15
+
+rank_hlc_methods(
+  data = hlc_weekly
 )
 
-
-hlc_new_weekly <- summarise_hlc_daily(
-  data = hlc_new_intervals,
-  group = Treatment,
-  day = NULL,
-  period = week,
-  interval_min = 15
-)
-
-HLCtools::compare_hlc_methods(hlc_new_weekly)
 
 
