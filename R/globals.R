@@ -8,5 +8,9 @@ utils::globalVariables(c(
   "mean_lying",
   "n_animals",
   "p_lying",
-  "sd_lying"
+  "sd_lying",
+  "weighted_rank_score",
+  "pct_missing",
+  "pct_boundary",
+  "detectability_F"
 ))

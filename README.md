@@ -145,6 +145,55 @@ hlc_daily
 #> #   mean_n_animals <dbl>
 ```
 
+## Rank HLC methods for a dataset
+
+Different datasets may favour different HLC implementations. `HLCtools`
+therefore provides a descriptive ranking helper.
+
+``` r
+rank_hlc_methods(
+  data = hlc_daily,
+  group = group,
+  period = week,
+  lying_prop = mean_lying_prop
+)
+#>    method metric_column n_total n_non_missing pct_missing      mean        sd
+#> 1  HLC_SD   mean_HLC_SD       4             4           0 0.3402575 0.3244934
+#> 2 HLC_MAD  mean_HLC_MAD       4             4           0 0.3866667 0.3214781
+#> 3 HLC_ENT  mean_HLC_ENT       4             4           0 0.4242837 0.4355433
+#> 4 HLC_IQR  mean_HLC_IQR       4             4           0 0.4583333 0.3435921
+#>      median        min       max pct_boundary detectability_F detectability_p
+#> 1 0.3289734 0.02020410 0.6828793            0       46.014560      0.02104854
+#> 2 0.3866667 0.04000000 0.7333333            0       22.222222      0.04217371
+#> 3 0.3340427 0.02904941 1.0000000           25        7.062389      0.11721597
+#> 4 0.5000000 0.00000000 0.8333333           25        1.923077      0.29985996
+#>    delta_AIC temporal_sd outlier_sensitivity outlier_distance_from_1
+#> 1 10.7134285         NaN           0.8296094               0.1703906
+#> 2  7.9764932         NaN           0.8131274               0.1868726
+#> 3  4.0439423         NaN           1.2102363               0.2102363
+#> 4  0.6949164         NaN           1.3904983               0.3904983
+#>   lying_prop_spearman rank_detectability rank_temporal_stability
+#> 1           0.4000000                  1                      NA
+#> 2           0.4000000                  2                      NA
+#> 3           0.4000000                  3                      NA
+#> 4           0.6324555                  4                      NA
+#>   rank_outlier_robustness rank_boundary rank_missingness weighted_rank_score
+#> 1                       1           1.5              2.5                 1.5
+#> 2                       2           1.5              2.5                 2.0
+#> 3                       3           3.5              2.5                 3.0
+#> 4                       4           3.5              2.5                 3.5
+#>   selected
+#> 1     TRUE
+#> 2    FALSE
+#> 3    FALSE
+#> 4    FALSE
+```
+
+The ranking is based on available criteria such as group detectability,
+temporal stability, outlier robustness, boundary values, and
+missingness. The result should support transparent method selection, not
+replace biological interpretation.
+
 ## Available methods
 
 ``` r

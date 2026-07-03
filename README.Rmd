@@ -82,6 +82,22 @@ hlc_daily <- summarise_hlc_daily(
 hlc_daily
 ```
 
+## Rank HLC methods for a dataset
+
+Different datasets may favour different HLC implementations. `HLCtools` therefore provides a descriptive ranking helper.
+
+```{r}
+rank_hlc_methods(
+  data = hlc_daily,
+  group = group,
+  period = week,
+  lying_prop = mean_lying_prop
+)
+```
+
+The ranking is based on available criteria such as group detectability, temporal stability, outlier robustness, boundary values, and missingness. The result should support transparent method selection, not replace biological interpretation.
+
+
 ## Available methods
 
 ```{r}

@@ -3,4 +3,5 @@
 export(calculate_hlc)
 export(compare_hlc_methods)
 export(hlc_methods)
+export(rank_hlc_methods)
 export(summarise_hlc_daily)

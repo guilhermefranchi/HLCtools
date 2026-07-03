@@ -109,6 +109,24 @@ The daily summary contains one row per group-day.
 
 Daily HLC columns are means of interval-level HLC values. Synchrony threshold columns are summarised as minutes per day.
 
+# Rank HLC methods for a dataset
+
+Different experiments may favour different HLC implementations. For example, one dataset may favour SD-based HLC, whereas another may favour MAD-, IQR-, or entropy-based HLC.
+
+`rank_hlc_methods()` provides a descriptive ranking of available HLC implementations.
+
+```{r}
+rank_hlc_methods(
+  data = hlc_daily,
+  group = group,
+  period = week,
+  lying_prop = mean_lying_prop
+)
+```
+
+The ranking does not prove that one method is universally best. It provides a transparent dataset-specific summary to support method selection.
+
+
 # Interpretation
 
 Unweighted HLC describes group-level behavioural cohesion.
