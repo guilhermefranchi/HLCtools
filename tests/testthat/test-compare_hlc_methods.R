@@ -55,3 +55,22 @@ test_that("compare_hlc_methods auto-detects weekly-style HLC columns", {
   expect_true(is.data.frame(comparison))
   expect_true(all(c("HLC_SD", "HLC_MAD", "HLC_IQR", "HLC_ENT") %in% comparison$method))
 })
+
+test_that("compare_hlc_methods detects lying-weighted HLC columns", {
+
+  dat <- data.frame(
+    HLC_SD_LYING = c(0.20, 0.25, 0.30),
+    HLC_MAD_LYING = c(0.18, 0.22, 0.28),
+    HLC_IQR_LYING = c(0.10, 0.15, 0.20),
+    HLC_ENT_LYING = c(0.12, 0.14, 0.16)
+  )
+
+  comparison <- compare_hlc_methods(dat)
+
+  expect_true(is.data.frame(comparison))
+  expect_true("HLC_SD_LYING" %in% comparison$method)
+  expect_true("HLC_MAD_LYING" %in% comparison$method)
+  expect_true("HLC_IQR_LYING" %in% comparison$method)
+  expect_true("HLC_ENT_LYING" %in% comparison$method)
+})
+

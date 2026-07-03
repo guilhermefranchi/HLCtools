@@ -44,10 +44,18 @@ compare_hlc_methods <- function(data, metrics = NULL) {
       "mean_HLC_MAD",
       "mean_HLC_IQR",
       "mean_HLC_ENT",
+      "mean_HLC_SD_LYING",
+      "mean_HLC_MAD_LYING",
+      "mean_HLC_IQR_LYING",
+      "mean_HLC_ENT_LYING",
       "HLC_SD",
       "HLC_MAD",
       "HLC_IQR",
-      "HLC_ENT"
+      "HLC_ENT",
+      "HLC_SD_LYING",
+      "HLC_MAD_LYING",
+      "HLC_IQR_LYING",
+      "HLC_ENT_LYING"
     )
 
     available_cols <- intersect(method_cols, names(data))
@@ -67,9 +75,9 @@ compare_hlc_methods <- function(data, metrics = NULL) {
 
   if (length(available_cols) == 0) {
     stop(
-      "No HLC columns were found. Expected one or more of: ",
-      "mean_HLC_SD, mean_HLC_MAD, mean_HLC_IQR, mean_HLC_ENT, ",
-      "or HLC_SD, HLC_MAD, HLC_IQR, HLC_ENT. ",
+      "No HLC columns were found. Expected unweighted or lying-weighted HLC columns, ",
+      "for example mean_HLC_SD, mean_HLC_MAD, mean_HLC_SD_LYING, ",
+      "or HLC_SD, HLC_MAD, HLC_SD_LYING. ",
       "Alternatively, provide metric column names using the `metrics` argument.",
       call. = FALSE
     )

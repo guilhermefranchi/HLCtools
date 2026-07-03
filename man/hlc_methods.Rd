@@ -2,13 +2,14 @@
 % Please edit documentation in R/hlc_methods.R
 \name{hlc_methods}
 \alias{hlc_methods}
-\title{List available HLC methods}
+\title{List available unweighted HLC methods}
 \usage{
 hlc_methods()
 }
 \value{
-A character vector of available method names.
+A character vector of available unweighted method names.
 }
 \description{
-Returns the currently implemented Herd Lying Concordance dispersion bases.
+Returns the currently implemented unweighted Herd Lying Concordance
+dispersion bases.
 }
