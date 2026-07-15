@@ -1,5 +1,15 @@
 # HLCtools 0.1.0
 
+## CRAN submission amendments
+
+* Added DOI-formatted references to related behavioural synchrony
+  methodologies in the package Description.
+* Clarified that the specific Herd Lying Concordance formulations are
+  introduced in this package.
+* Removed unnecessary `\dontrun{}` wrappers from short, executable examples.
+* Ensured that all exported functions have directly executable examples and
+  installed help pages.
+
 ## New features
 
 * Added `calculate_hlc()` for interval-level Herd Lying Concordance calculations.

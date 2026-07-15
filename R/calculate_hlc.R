@@ -23,17 +23,23 @@
 #' @return A tibble with one row per group-time interval.
 #'
 #' @examples
-#' \dontrun{
+#' data(example_lies)
+#'
 #' hlc_intervals <- calculate_hlc(
-#'   data = raw_for_sync,
-#'   group = Treatment,
-#'   animal = Cow,
-#'   day = exp.day,
+#'   data = example_lies,
+#'   group = group,
+#'   animal = cow,
+#'   day = day,
 #'   period = week,
-#'   interval = t_hms,
-#'   lying = Lying_min
+#'   interval = time,
+#'   lying = lying,
+#'   interval_min = 15,
+#'   methods = c("sd", "mad", "iqr", "entropy"),
+#'   sync_thresholds = c(0.6, 0.7, 0.8, 0.9),
+#'   add_lying_weighted = TRUE
 #' )
-#' }
+#'
+#' hlc_intervals
 #'
 #' @export
 calculate_hlc <- function(data,

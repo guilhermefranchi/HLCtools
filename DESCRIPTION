@@ -9,13 +9,7 @@ Authors@R:
         role = c("aut", "cre", "cph"),
         comment = c(ORCID = "0000-0001-7653-6512")
     )
-Description: Calculates Herd Lying Concordance metrics from individual animal
-    lying-behaviour data. Herd Lying Concordance is a framework for
-    quantifying group-level behavioural cohesion from the distribution of
-    individual lying behaviour within observation intervals. The package
-    supports multiple dispersion-based implementations, threshold synchrony
-    comparisons, lying-weighted extensions, daily summaries, and descriptive
-    method-ranking tools.
+Description: Calculates Herd Lying Concordance (HLC) metrics from individual animal lying-behaviour data. HLC is a continuous framework for quantifying group-level behavioural cohesion from between-animal dispersion within observation intervals. The package implements standard deviation, mean absolute deviation, interquartile range, and entropy formulations, lying-weighted extensions, threshold-based synchrony comparisons, temporal summaries, and descriptive method-ranking tools. The HLC formulations are introduced in this package; related approaches to cattle behavioural synchrony include Raussi et al. (2011) <doi:10.1017/S1751731110001928>, Kok et al. (2023) <doi:10.1016/j.applanim.2023.105906>, and the activity metric framework of van Dixhoorn et al. (2024) <doi:10.24072/pcjournal.489>.
 License: MIT + file LICENSE
 URL: https://github.com/guilhermefranchi/HLCtools
 BugReports: https://github.com/guilhermefranchi/HLCtools/issues

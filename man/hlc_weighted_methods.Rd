@@ -7,9 +7,14 @@
 hlc_weighted_methods()
 }
 \value{
-A character vector of available lying-weighted HLC method names.
+A character vector containing the available lying-weighted HLC
+method names.
 }
 \description{
-Returns the currently implemented lying-weighted Herd Lying Concordance
-method names.
+Returns the names of the currently implemented lying-weighted Herd Lying
+Concordance methods.
+}
+\examples{
+hlc_weighted_methods()
+
 }

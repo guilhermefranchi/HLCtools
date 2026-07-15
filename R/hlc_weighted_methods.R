@@ -1,9 +1,13 @@
 #' List available lying-weighted HLC methods
 #'
-#' Returns the currently implemented lying-weighted Herd Lying Concordance
-#' method names.
+#' Returns the names of the currently implemented lying-weighted Herd Lying
+#' Concordance methods.
 #'
-#' @return A character vector of available lying-weighted HLC method names.
+#' @return A character vector containing the available lying-weighted HLC
+#'   method names.
+#'
+#' @examples
+#' hlc_weighted_methods()
 #'
 #' @export
 hlc_weighted_methods <- function() {

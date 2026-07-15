@@ -24,13 +24,27 @@ A tibble with daily HLC summaries.
 Aggregates interval-level HLC metrics into daily group-level summaries.
 }
 \examples{
-\dontrun{
-hlc_daily <- summarise_hlc_daily(
-  hlc_intervals,
-  group = Treatment,
-  day = exp.day,
-  period = week
+data(example_lies)
+
+hlc_intervals <- calculate_hlc(
+  data = example_lies,
+  group = group,
+  animal = cow,
+  day = day,
+  period = week,
+  interval = time,
+  lying = lying,
+  interval_min = 15
 )
-}
+
+hlc_daily <- summarise_hlc_daily(
+  data = hlc_intervals,
+  group = group,
+  day = day,
+  period = week,
+  interval_min = 15
+)
+
+hlc_daily
 
 }
