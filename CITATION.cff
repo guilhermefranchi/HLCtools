@@ -3,6 +3,8 @@ message: "If you use HLCtools, please cite it using the metadata from this file.
 type: software
 title: "HLCtools: Calculate Herd Lying Concordance Metrics"
 version: "0.1.0"
+date-released: "2026-07-26"
+doi: 10.5281/zenodo.21594206
 authors:
   - family-names: "Amorim Franchi"
     given-names: "Guilherme"
