@@ -29,6 +29,11 @@ If you use `HLCtools`, please cite the package:
 citation("HLCtools")
 ```
 
+https://www.r-pkg.org/badges/version/HLCtools](https://CRAN.R-project.org/package=HLCtools)
+https://cranlogs.r-pkg.org/badges/grand-total/HLCtools](https://CRAN.R-project.org/package=HLCtools)
+https://github.com/guilhermefranchi/HLCtools
+https://doi.org/10.5281/zenodo.21594206
+
 ## Concept
 
 Traditional threshold-based synchrony metrics classify an interval as synchronous when a fixed proportion of animals are lying, for example 70%. HLC takes a different approach: it calculates group cohesion continuously from between-animal dispersion.
