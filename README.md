@@ -245,7 +245,7 @@ hlc_methods()
 
 ## Interpretation
 
-Unweighted HLC describes group-level behavioural cohesion. It can be
+Unweighted HLC describes group-level postural cohesion. It can be
 high when animals are uniformly lying or uniformly standing.
 
 Lying-weighted HLC describes cohesive lying specifically. It is
@@ -261,8 +261,4 @@ Thus:
 
 ## Current scope
 
-`HLCtools` computes HLC metrics. It does not automatically decide which
-dispersion basis is universally best. The choice of SD, MAD, IQR,
-entropy, or another implementation should depend on the dataset,
-biological question, group size, sampling interval, and intended
-application.
+`HLCtools` implements a flexible framework for calculating group-level behavioural concordance from individual animal lying records. The package supports multiple dispersion-based formulations and lying-weighted extensions. The optimal formulation may depend on the dataset, group size, sampling resolution and research question. HLC metrics should currently be interpreted as research and monitoring measures rather than stand-alone validated welfare indicators.
